@@ -1,23 +1,28 @@
-import {pipeline} from '@xenova/transformers'
+import dotenv from 'dotenv';
+dotenv.config();
+import fs from 'fs';
+import path from 'path';
+import { OpenAI } from 'openai';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-export async function transcribe(audio) {
-    try {
-        console.log('realizando transcrição');
-        
-        const transcribe = await pipeline(
-            'automatic-speech-recognition',
-            'Xenova/whisper-small'
-        );
-        const transcription = await transcribe(audio,{
-            chunk_length_s:30,
-            stride_length_s:5,
-            language:'portuguese',
-            task:'transcribe',
-        });
-        console.log('realizanda à transcrição');
-        return transcription?.text.replace("[Música]","");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-    } catch (error) {
-        throw new Error(error);
-    }
-}
+
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
+
+export const transcribe = async () => {
+    const audioPath = path.resolve(__dirname, '../tmp/audio.wav');
+
+
+    const transcription = await openai.audio.transcriptions.create({
+        file: fs.createReadStream(audioPath),
+        model: 'whisper-1',
+        response_format: 'text' // só o texto direto
+    });
+
+    return transcription;
+};

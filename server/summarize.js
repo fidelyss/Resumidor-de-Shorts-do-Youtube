@@ -1,18 +1,19 @@
-import { pipeline } from "@xenova/transformers"
+import dotenv from 'dotenv';
+dotenv.config();
+import { OpenAI } from 'openai';
 
-export async function summarize(text) {
-    try {
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
 
-        const generator = await pipeline(
-            'summarization',
-            'Xenova/distilbart-cnn-12-6'
-        );
-        const output = await generator(text);
-        console.log('realizanda o resumo');
-        return output[0].summary_text;
-    } catch (error) {
-        console.log(error);
-        throw new Error(error);
-    }
+export const summarize = async (text) => {
+    const response = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+            { role: "system", content: "Você é um assistente que resume textos de forma clara e objetiva." },
+            { role: "user", content: `Resuma o texto a seguir:\n\n${text}` }
+        ]
+    });
 
-}
+    return response.choices[0].message.content;
+};
