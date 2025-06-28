@@ -6,6 +6,11 @@ import { OpenAI } from 'openai';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+/**
+ * ! NÃO ESTA FUNCIONANDO
+ * TODO: TROQUE POR OUTRA IA QUE SEJA GRATUITA
+ */
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 

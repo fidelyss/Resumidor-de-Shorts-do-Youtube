@@ -1,5 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config();
+
+/**
+ * ! NÃO ESTA FUNCIONANDO
+ * TODO: TROQUE POR OUTRA IA QUE SEJA GRATUITA
+ */
 import { OpenAI } from 'openai';
 
 const openai = new OpenAI({
